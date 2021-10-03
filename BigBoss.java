@@ -147,7 +147,7 @@ public class BigBoss {
             for (int i = 0; i < bon_img.size(); i++) {
                 //Bonus.GetSprite(bon_img.get(i)[0]).setSize(50f / Constants.BONUS_SMALL_SCALE, 50f / Constants.BONUS_SMALL_SCALE);
                 if (bon_img.get(i)[1] < 300)
-                    Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(0.5f + ((float) (bon_img.get(i)[1] % 50)) / 100);
+                    Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(0.5f + ((float) (bon_img.get(i)[1] % Constants.TILE_SIZE)) / 100);
                 else Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(1f);
 
                 Bonus.GetSprite(bon_img.get(i)[0]).setOrigin(0, -texwid/2);
@@ -157,7 +157,7 @@ public class BigBoss {
                 Bonus.GetSprite(bon_img.get(i)[0]).draw(batch);
                 Bonus.GetSprite(bon_img.get(i)[0]).setRotation(0);
                 Bonus.GetSprite(bon_img.get(i)[0]).setOriginCenter();
-                Bonus.GetSprite(bon_img.get(i)[0]).setSize(50f, 50f);
+                Bonus.GetSprite(bon_img.get(i)[0]).setSize(Constants.TILE_SIZE, Constants.TILE_SIZE);
                 Bonus.GetSprite(bon_img.get(i)[0]).setScale(1);
             }
             ang+=2;
@@ -300,16 +300,24 @@ public class BigBoss {
     }
 
     private int getAngletoUser(MyGdxGame mg) {
+        int smallestAlpha=360;
         for (user tank : mg.getUsers()) {
             if (tank.isAlive()) {
                 float x = tank.getPosition().x - getPosition().x;
                 float y = tank.getPosition().y - getPosition().y;
                 double alpha_rad = Math.atan2(y, x);
                 double alpha = Math.toDegrees(alpha_rad);
-                return ((int) alpha + 360) % 360 - 90;
+                //int alphaPos=((int) alpha + 360) % 360 - 90;
+
+                if(Math.abs(intAngle(alpha)-intAngle(getTurret_orient()))<smallestAlpha) smallestAlpha=intAngle(alpha);
+                //return ((int) alpha + 360) % 360 - 90;
             }
         }
-        return 180;
+        if(smallestAlpha==360) return 180; else return smallestAlpha-90;
+    }
+
+    private int intAngle(double angle) {
+        return ((int) angle + 360) % 360;
     }
 
     private void checkCollision(MyGdxGame mg) {

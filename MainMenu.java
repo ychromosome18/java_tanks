@@ -87,6 +87,7 @@ public class MainMenu {
                     mg.getMs().play("menu");
 
                     if(str.equals("start")) {
+                        //Gdx.graphics.setWindowedMode(800, 500);
                         ConfigMenu("mmenu;easy;medium;hard");
                         //mg.setBegin(false);
                         break;

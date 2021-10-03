@@ -35,7 +35,7 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        //long start_conn = System.currentTimeMillis();
+        //  чтение пришедшего SendData
         while (!socket.isClosed()) {
             try {
                 //String msg = in.readUTF();

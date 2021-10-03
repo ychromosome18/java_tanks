@@ -21,12 +21,12 @@ public class RoundEnd {
     private ArrayList<Texture> pics = null;
     private Texture win1, fail1;
     private Random rand;
-    private ArrayList<Sound> snd_win = null;
-    private ArrayList<Sound> snd_fail = null;
+//    private ArrayList<Sound> snd_win = null;
+//    private ArrayList<Sound> snd_fail = null;
     boolean start_sound;
     //  win=1   выйграл     win=2   не совсем
     private int i = 0, win = 0;
-    MyGdxGame mg;
+    private MyGdxGame mg;
 
     RoundEnd(MyGdxGame mg) {
         pics = new ArrayList<Texture>();
@@ -52,15 +52,15 @@ public class RoundEnd {
         fail1 = new Texture("fail1.png");
         rand = new Random();
 
-        snd_win = new ArrayList<Sound>();
-        snd_win.add(Gdx.audio.newSound(Gdx.files.internal("win1.mp3")));
-        snd_win.add(Gdx.audio.newSound(Gdx.files.internal("win2.mp3")));
-        snd_win.add(Gdx.audio.newSound(Gdx.files.internal("win3.mp3")));
-        snd_win.add(Gdx.audio.newSound(Gdx.files.internal("win4.mp3")));
-        snd_fail = new ArrayList<Sound>();
-        snd_fail.add(Gdx.audio.newSound(Gdx.files.internal("fail1.mp3")));
-        snd_fail.add(Gdx.audio.newSound(Gdx.files.internal("fail2.mp3")));
-        snd_fail.add(Gdx.audio.newSound(Gdx.files.internal("fail3.mp3")));
+//        snd_win = new ArrayList<Sound>();
+//        snd_win.add(Gdx.audio.newSound(Gdx.files.internal("win1.mp3")));
+//        snd_win.add(Gdx.audio.newSound(Gdx.files.internal("win2.mp3")));
+//        snd_win.add(Gdx.audio.newSound(Gdx.files.internal("win3.mp3")));
+//        snd_win.add(Gdx.audio.newSound(Gdx.files.internal("win4.mp3")));
+//        snd_fail = new ArrayList<Sound>();
+//        snd_fail.add(Gdx.audio.newSound(Gdx.files.internal("fail1.mp3")));
+//        snd_fail.add(Gdx.audio.newSound(Gdx.files.internal("fail2.mp3")));
+//        snd_fail.add(Gdx.audio.newSound(Gdx.files.internal("fail3.mp3")));
 
         this.mg=mg;
         renew();
@@ -87,8 +87,8 @@ public class RoundEnd {
         pics.clear();
         win1.dispose();
         fail1.dispose();
-        snd_win.clear();
-        snd_fail.clear();
+//        snd_win.clear();
+//        snd_fail.clear();
     }
 
     public void renew() {
@@ -112,9 +112,9 @@ public class RoundEnd {
     private void play_snd(int w) {
         start_sound = true;
         if (w == 1) {
-            snd_win.get(rand.nextInt(snd_win.size())).play(0.5f);
+            mg.getMs().play_end(true);
         } else {
-            snd_fail.get(rand.nextInt(snd_fail.size())).play(0.5f);
+            mg.getMs().play_end(false);
         }
         mg.getBb().stopSound();
     }

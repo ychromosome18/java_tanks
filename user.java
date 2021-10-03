@@ -119,13 +119,13 @@ public class user {
     public void renderBonus(SpriteBatch batch) {
         if (!sprk.isActive()) {
             for (int i = 0; i < bon_img.size(); i++) {
-                Bonus.GetSprite(bon_img.get(i)[0]).setSize(50f / Constants.BONUS_SMALL_SCALE, 50f / Constants.BONUS_SMALL_SCALE);
+                Bonus.GetSprite(bon_img.get(i)[0]).setSize(1f*Constants.TILE_SIZE / Constants.BONUS_SMALL_SCALE, 1f*Constants.TILE_SIZE / Constants.BONUS_SMALL_SCALE);
                 if (bon_img.get(i)[1] < 300)
-                    Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(0.5f + ((float) (bon_img.get(i)[1] % 50)) / 100);
+                    Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(0.5f + ((float) (bon_img.get(i)[1] % Constants.TILE_SIZE)) / 100);
                 else Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(1f);
-                Bonus.GetSprite(bon_img.get(i)[0]).setPosition(position.x + i * 50f / Constants.BONUS_SMALL_SCALE + texwid / 2, position.y + texhei / 2);
+                Bonus.GetSprite(bon_img.get(i)[0]).setPosition(position.x + i * 1f*Constants.TILE_SIZE / Constants.BONUS_SMALL_SCALE + texwid / 2, position.y + texhei / 2);
                 Bonus.GetSprite(bon_img.get(i)[0]).draw(batch);
-                Bonus.GetSprite(bon_img.get(i)[0]).setSize(50f, 50f);
+                Bonus.GetSprite(bon_img.get(i)[0]).setSize(1f*Constants.TILE_SIZE, 1f*Constants.TILE_SIZE);
             }
             if (name != null)
                 tx.render(batch, name, (int) (position.x + texwid / 2), (int) (position.y - texhei / 2) + 12, 1f, Color.CYAN);
@@ -250,7 +250,7 @@ public class user {
 
             if (Gdx.input.justTouched()) {
                 if ((System.currentTimeMillis() - last_touched) < Constants.GAME_DOUBLE_TOUCH_DELAY && last_touch_pos.dst(Gdx.input.getX(), Gdx.input.getY()) < Constants.GAME_DOUBLE_TOUCH_DELTA) {
-                    FindPath(mg.getTiles(), Gdx.input.getX() / 50, (Gdx.graphics.getHeight() - Gdx.input.getY()) / 50);
+                    FindPath(mg.getTiles(), Gdx.input.getX() / Constants.TILE_SIZE, (Gdx.graphics.getHeight() - Gdx.input.getY()) / Constants.TILE_SIZE);
                 }
                 last_touched = System.currentTimeMillis();
                 last_touch_pos.set(Gdx.input.getX(), Gdx.input.getY());
@@ -264,14 +264,14 @@ public class user {
                 if (engine_id == -1) engine_id = mg.getMs().loop("engine");
                 else mg.getMs().resume("engine", engine_id);
 
-                int my_tile_x = (int) position.x / 50;
-                int my_tile_y = (int) position.y / 50;
+                int my_tile_x = (int) position.x / Constants.TILE_SIZE;
+                int my_tile_y = (int) position.y / Constants.TILE_SIZE;
                 switch (orient) {           //  выравнивание для въезда между тайлами
                     case 270:
                         if (my_tile_x < tiles.length - 1 && my_tile_y > 0 && my_tile_y < tiles[0].length - 1) {
                             if (!tiles[my_tile_x + 1][my_tile_y - 1].isPass() && !tiles[my_tile_x + 1][my_tile_y + 1].isPass() && tiles[my_tile_x + 1][my_tile_y].isPass()) {
-                                if (Math.abs(position.y - tiles[my_tile_x][my_tile_y].getPosition().y - 25) < speed * 5 && (position.x - tiles[my_tile_x][my_tile_y].getPosition().x - 25) <= speed * 2 && position.x > tiles[my_tile_x][my_tile_y].getPosition().x + 25) {
-                                    position.y = tiles[my_tile_x][my_tile_y].getPosition().y + 25;
+                                if (Math.abs(position.y - tiles[my_tile_x][my_tile_y].getPosition().y - Constants.TILE_SIZE/2) < speed * 5 && (position.x - tiles[my_tile_x][my_tile_y].getPosition().x - Constants.TILE_SIZE/2) <= speed * 2 && position.x > tiles[my_tile_x][my_tile_y].getPosition().x + Constants.TILE_SIZE/2) {
+                                    position.y = tiles[my_tile_x][my_tile_y].getPosition().y + Constants.TILE_SIZE/2;
                                 }
                             }
                         }
@@ -279,8 +279,8 @@ public class user {
                     case 90:
                         if (my_tile_x > 0 && my_tile_y > 0 && my_tile_y < tiles[0].length - 1) {
                             if (!tiles[my_tile_x - 1][my_tile_y - 1].isPass() && !tiles[my_tile_x - 1][my_tile_y + 1].isPass() && tiles[my_tile_x - 1][my_tile_y].isPass()) {
-                                if (Math.abs(position.y - tiles[my_tile_x][my_tile_y].getPosition().y - 25) < speed * 5 && (tiles[my_tile_x][my_tile_y].getPosition().x + 25 - position.x) <= speed * 2 && position.x < tiles[my_tile_x][my_tile_y].getPosition().x + 25) {
-                                    position.y = tiles[my_tile_x][my_tile_y].getPosition().y + 25;
+                                if (Math.abs(position.y - tiles[my_tile_x][my_tile_y].getPosition().y - Constants.TILE_SIZE/2) < speed * 5 && (tiles[my_tile_x][my_tile_y].getPosition().x + Constants.TILE_SIZE/2 - position.x) <= speed * 2 && position.x < tiles[my_tile_x][my_tile_y].getPosition().x + Constants.TILE_SIZE/2) {
+                                    position.y = tiles[my_tile_x][my_tile_y].getPosition().y + Constants.TILE_SIZE/2;
                                 }
                             }
                         }
@@ -288,8 +288,8 @@ public class user {
                     case 0:
                         if (my_tile_x > 0 && my_tile_x < tiles.length - 1 && my_tile_y < tiles[0].length - 1) {
                             if (!tiles[my_tile_x - 1][my_tile_y + 1].isPass() && !tiles[my_tile_x + 1][my_tile_y + 1].isPass() && tiles[my_tile_x][my_tile_y + 1].isPass()) {
-                                if (Math.abs(position.x - tiles[my_tile_x][my_tile_y].getPosition().x - 25) < speed * 5 && (position.y - tiles[my_tile_x][my_tile_y].getPosition().y - 25) <= speed * 2 && position.y > tiles[my_tile_x][my_tile_y].getPosition().y + 25) {
-                                    position.x = tiles[my_tile_x][my_tile_y].getPosition().x + 25;
+                                if (Math.abs(position.x - tiles[my_tile_x][my_tile_y].getPosition().x - Constants.TILE_SIZE/2) < speed * 5 && (position.y - tiles[my_tile_x][my_tile_y].getPosition().y - Constants.TILE_SIZE/2) <= speed * 2 && position.y > tiles[my_tile_x][my_tile_y].getPosition().y + Constants.TILE_SIZE/2) {
+                                    position.x = tiles[my_tile_x][my_tile_y].getPosition().x + Constants.TILE_SIZE/2;
                                 }
                             }
                         }
@@ -297,8 +297,8 @@ public class user {
                     case 180:
                         if (my_tile_x > 0 && my_tile_x < tiles.length - 1 && my_tile_y > 0) {
                             if (!tiles[my_tile_x - 1][my_tile_y - 1].isPass() && !tiles[my_tile_x + 1][my_tile_y - 1].isPass() && tiles[my_tile_x][my_tile_y - 1].isPass()) {
-                                if (Math.abs(position.x - tiles[my_tile_x][my_tile_y].getPosition().x - 25) < speed * 5 && (tiles[my_tile_x][my_tile_y].getPosition().y + 25 - position.y) <= speed * 2 && position.y < tiles[my_tile_x][my_tile_y].getPosition().y + 25) {
-                                    position.x = tiles[my_tile_x][my_tile_y].getPosition().x + 25;
+                                if (Math.abs(position.x - tiles[my_tile_x][my_tile_y].getPosition().x - Constants.TILE_SIZE/2) < speed * 5 && (tiles[my_tile_x][my_tile_y].getPosition().y + Constants.TILE_SIZE/2 - position.y) <= speed * 2 && position.y < tiles[my_tile_x][my_tile_y].getPosition().y + Constants.TILE_SIZE/2) {
+                                    position.x = tiles[my_tile_x][my_tile_y].getPosition().x + Constants.TILE_SIZE/2;
                                 }
                             }
                         }
@@ -306,29 +306,29 @@ public class user {
                 }
 
                 boolean br = false;
-                for (int k = 0; k < Constants.WINDOW_WIDTH; k += 50) {
-                    for (int j = 0; j < Constants.WINDOW_HEIGHT; j += 50) {
-                        if (!tiles[k / 50][j / 50].isPass()) {
-                            if (position.x + cur_width > tiles[k / 50][j / 50].getPosition().x && position.x - cur_width < tiles[k / 50][j / 50].getPosition().x + 50 && position.y + cur_height > tiles[k / 50][j / 50].getPosition().y && position.y - cur_height < tiles[k / 50][j / 50].getPosition().y + 50) {
+                for (int k = 0; k < Constants.WINDOW_WIDTH; k += Constants.TILE_SIZE) {
+                    for (int j = 0; j < Constants.WINDOW_HEIGHT; j += Constants.TILE_SIZE) {
+                        if (!tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].isPass()) {
+                            if (position.x + cur_width > tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getPosition().x && position.x - cur_width < tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getPosition().x + 50 && position.y + cur_height > tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getPosition().y && position.y - cur_height < tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getPosition().y + Constants.TILE_SIZE) {
                                 switch (orient) {
                                     case 270:
                                         if (speed > Constants.USER_SPEED)
-                                            position.x = tiles[k / 50][j / 50].getPosition().x - cur_width;
+                                            position.x = tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getPosition().x - cur_width;
                                         else position.x -= speed;
                                         break;
                                     case 90:
                                         if (speed > Constants.USER_SPEED)
-                                            position.x = tiles[k / 50][j / 50].getPosition().x + cur_width + tiles[k / 50][j / 50].getWidth();
+                                            position.x = tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getPosition().x + cur_width + tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getWidth();
                                         else position.x += speed;
                                         break;
                                     case 0:
                                         if (speed > Constants.USER_SPEED)
-                                            position.y = tiles[k / 50][j / 50].getPosition().y - cur_width;
+                                            position.y = tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getPosition().y - cur_width;
                                         else position.y -= speed;
                                         break;
                                     case 180:
                                         if (speed > Constants.USER_SPEED)
-                                            position.y = tiles[k / 50][j / 50].getPosition().y + cur_width + tiles[k / 50][j / 50].getHeight();
+                                            position.y = tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getPosition().y + cur_width + tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getHeight();
                                         else position.y += speed;
                                         break;
                                 }
@@ -351,20 +351,20 @@ public class user {
                     int my_tile_x = 0, my_tile_y = 0;
                     switch (orient) {
                         case 0:
-                            my_tile_x = (int) position.x / 50;
-                            my_tile_y = (int) (position.y - 25) / 50;
+                            my_tile_x = (int) position.x / Constants.TILE_SIZE;
+                            my_tile_y = (int) (position.y - Constants.TILE_SIZE/2) / Constants.TILE_SIZE;
                             break;
                         case 90:
-                            my_tile_x = (int) (position.x + 25) / 50;
-                            my_tile_y = (int) position.y / 50;
+                            my_tile_x = (int) (position.x + Constants.TILE_SIZE/2) / Constants.TILE_SIZE;
+                            my_tile_y = (int) position.y / Constants.TILE_SIZE;
                             break;
                         case 180:
-                            my_tile_x = (int) position.x / 50;
-                            my_tile_y = (int) (position.y + 25) / 50;
+                            my_tile_x = (int) position.x / Constants.TILE_SIZE;
+                            my_tile_y = (int) (position.y + Constants.TILE_SIZE/2) / Constants.TILE_SIZE;
                             break;
                         case 270:
-                            my_tile_x = (int) (position.x - 25) / 50;
-                            my_tile_y = (int) position.y / 50;
+                            my_tile_x = (int) (position.x - Constants.TILE_SIZE/2) / Constants.TILE_SIZE;
+                            my_tile_y = (int) position.y / Constants.TILE_SIZE;
                             break;
                     }
 
@@ -529,7 +529,7 @@ public class user {
         for (int i = 0; i < maxx; i++) {
             Arrays.fill(t[i], -1);
         }
-        t[(int) position.x / 50][(int) position.y / 50] = 0;
+        t[(int) position.x / Constants.TILE_SIZE][(int) position.y / Constants.TILE_SIZE] = 0;
 
         for (int k = 0; k < maxx * 2 + maxy; k++) {
             for (int i = 0; i < maxx; i++) {

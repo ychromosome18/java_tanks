@@ -59,8 +59,10 @@ public class MyGdxGame extends ApplicationAdapter {
             e.printStackTrace();
         }
 
+
         batch = new SpriteBatch();
         batch.enableBlending();
+        //  текстура для снаряда
         textureshell = new Texture("shell.png");
         tx = new Text();
 
@@ -79,25 +81,30 @@ public class MyGdxGame extends ApplicationAdapter {
 //            shls[i] = new shell();
 //        }
 
-        tiles = new tile[Constants.WINDOW_WIDTH / 50][Constants.WINDOW_HEIGHT / 50];
-        for (int i = 0; i < Constants.WINDOW_WIDTH; i += 50) {
-            for (int j = 0; j < Constants.WINDOW_HEIGHT; j += 50) {
-                tiles[i / 50][j / 50] = new tile(i, j, 0);
+        //  создание всех тайлов
+        tiles = new tile[Constants.WINDOW_WIDTH / Constants.TILE_SIZE][Constants.WINDOW_HEIGHT / Constants.TILE_SIZE];
+        for (int i = 0; i < Constants.WINDOW_WIDTH; i += Constants.TILE_SIZE) {
+            for (int j = 0; j < Constants.WINDOW_HEIGHT; j += Constants.TILE_SIZE) {
+                tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE] = new tile(i, j, 0);
             }
         }
 
+        //   взрывы
         explosions = new Explosion[15];
         for (int i = 0; i < explosions.length; i++) explosions[i] = new Explosion();
 
+        //  бонусы
         bs = new Bonus[8];
         for (int i = 0; i < bs.length; i++) {
             bs[i] = new Bonus((byte) i);
         }
 
+        //  враги
         enemies = new ArrayList<Enemy>();
         ms = new Mysounds(this);
 
         Enemy.InitTextures();
+        //  счёт игры
         sc = new Score(Enemy.getTex_average(), Enemy.getTex_fast(), Enemy.getTex_big(), user.getTex_average(), user.getTex_fast(), user.getTex_big());
         tx = new Text();
 
@@ -167,9 +174,9 @@ public class MyGdxGame extends ApplicationAdapter {
                 }
             }
             //	рисование квадратов
-            for (int i = 0; i < Constants.WINDOW_WIDTH; i += 50) {
-                for (int j = 0; j < Constants.WINDOW_HEIGHT; j += 50) {
-                    tiles[i / 50][j / 50].render(batch);
+            for (int i = 0; i < Constants.WINDOW_WIDTH; i += Constants.TILE_SIZE) {
+                for (int j = 0; j < Constants.WINDOW_HEIGHT; j += Constants.TILE_SIZE) {
+                    tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE].render(batch);
                 }
             }
 
@@ -205,11 +212,13 @@ public class MyGdxGame extends ApplicationAdapter {
         batch.end();
     }
 
+    //  рассчёт движений объектов
     public void update() {
         if (endcount > 1) endcount--;
 
         //if (tank.isAlive()) tank.update(this);
 
+        //  определение живых команд
         boolean player_alive = false, team2_alive=false;
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).isAlive()) {
@@ -221,6 +230,7 @@ public class MyGdxGame extends ApplicationAdapter {
         }
         //if(tank.isAlive()) player_alive=true;
 
+        //  бонусы
         for (Bonus b : bs) {
             b.update(this);
             //b.CheckPick(tank, this);
@@ -229,6 +239,7 @@ public class MyGdxGame extends ApplicationAdapter {
             }
         }
 
+        //  определение живых врагов
         boolean any_alive = false;
         for (int i = 0; i < enemies.size(); i++) {
             if (enemies.get(i).active) {
@@ -250,6 +261,7 @@ public class MyGdxGame extends ApplicationAdapter {
             for (Bonus b : bs) b.CheckPick(this);
         }
 
+        //  включение экрана конца раунда, если надо
         if (game_mode != Constants.GAME_MODE_CLIENT) {
             if (game_type == Constants.GAME_TYPE_PvB) {
                 if (((!any_alive && !bb.isAlive()) || !player_alive) && endcount == 0) {
@@ -280,12 +292,14 @@ public class MyGdxGame extends ApplicationAdapter {
             }
         }
 
+        //  взрывы
         for (int i = 0; i < explosions.length; i++) {
             if (explosions[i].isActive()) {
                 explosions[i].update(this);
             }
         }
 
+        //  снаряды
         ArrayList<shell> to_del=new ArrayList<shell>();
         for (int i = 0; i < shls.size(); i++) {
             if(!shls.get(i).update(this)) to_del.add(shls.get(i));
@@ -322,6 +336,7 @@ public class MyGdxGame extends ApplicationAdapter {
         bb.dispose();
     }
 
+    //  пауза
     public void paus(int p, boolean local) {
         if(p==1) pause=true;
         else if(p==2) pause=false;
@@ -357,6 +372,7 @@ public class MyGdxGame extends ApplicationAdapter {
         enemy_count = count;
         endcount=0;
 
+        //  генерация расположения игроков
         int shift=Constants.WINDOW_WIDTH/(users.size()+1);
         for (int i = 0; i < users.size(); i++) {
             //users.get(i).SetPos(Constants.USER_INIT_X + 100 * (i + 1), Constants.USER_INIT_Y, Constants.USER_ORIENT, true, this);
@@ -372,14 +388,15 @@ public class MyGdxGame extends ApplicationAdapter {
 //        }
         shls.clear();
 
-        for (int i = 0; i < Constants.WINDOW_WIDTH; i += 50) {
-            for (int j = 0; j < Constants.WINDOW_HEIGHT; j += 50) {
-                if (j < 50 || j > 600) {
-                    tiles[i / 50][j / 50].rewrite(0);
+        //  генерация типов тайлов
+        for (int i = 0; i < Constants.WINDOW_WIDTH; i += Constants.TILE_SIZE) {
+            for (int j = 0; j < Constants.WINDOW_HEIGHT; j += Constants.TILE_SIZE) {
+                if (j < Constants.TILE_SIZE || j > Constants.WINDOW_HEIGHT-Constants.TILE_SIZE*2) {
+                    tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE].rewrite(0);
                 } else {
                     int t = Math.round((float) Math.random() * 5) - 1;
                     if (t < 0 || win_rounds==Constants.BOSS_WIN_ROUND) t = 0;
-                    tiles[i / 50][j / 50].rewrite(t);
+                    tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE].rewrite(t);
                 }
             }
         }
@@ -389,6 +406,7 @@ public class MyGdxGame extends ApplicationAdapter {
         enem_pos = 0;
         //net_send_count=Constants.GAME_NET_SEND_PERIOD;
 
+        //  генерация врагов
         if (game_type == Constants.GAME_TYPE_PvB) {
             for (Enemy en : enemies) {
                 if (en.getEngine_id() != -1) ms.stop("enemyengine", en.getEngine_id());
@@ -400,12 +418,12 @@ public class MyGdxGame extends ApplicationAdapter {
             if(win_rounds==Constants.BOSS_WIN_ROUND) {
                 //bb=new BigBoss(300,300);
                 //bb.renew(500,-1000);
-                bb.setPos((Constants.WINDOW_WIDTH-Constants.SCORE_WIDTH)/2,1000);
-                if (game_mode == Constants.GAME_MODE_SERVER) sd.addBoss(Float.valueOf((Constants.WINDOW_WIDTH-Constants.SCORE_WIDTH)/2),Float.valueOf(1000), Float.valueOf(180), Float.valueOf(180), 0f);
+                bb.setPos(Constants.WINDOW_WIDTH/2,Constants.WINDOW_HEIGHT+300);
+                if (game_mode == Constants.GAME_MODE_SERVER) sd.addBoss(Float.valueOf(Constants.WINDOW_WIDTH/2),Float.valueOf(Constants.WINDOW_HEIGHT+300), Float.valueOf(180), Float.valueOf(180), 0f);
             } else {
 
                 for (int i = 0; i < count; i++) {
-                    Enemy en = new Enemy(25 + enem_pos * 550, 675, Math.round((float) Math.random() * 2) + 1);
+                    Enemy en = new Enemy(Constants.TILE_SIZE/2 + enem_pos * (Constants.WINDOW_WIDTH-Constants.TILE_SIZE)/2, Constants.WINDOW_HEIGHT-Constants.TILE_SIZE/2, Math.round((float) Math.random() * 2) + 1);
                     enemies.add(en);
                     if (game_mode == Constants.GAME_MODE_SERVER)
                         sd.addEnemy(en.getPosition().x, en.getPosition().y, en.getOrient(), 0, 0, en.getType(), i);
@@ -415,10 +433,12 @@ public class MyGdxGame extends ApplicationAdapter {
             }
         }
 
+        //  сброс бонусов
         for (Bonus b : bs) b.rewrite();
 
         re.renew();     //  обновление номера финальной картинки
 
+        //  рассылка настроек клиентам при многопользовательской игре
         if (game_mode == Constants.GAME_MODE_SERVER) {
             sd.addTiles(tiles);
             sd.SetStatus(Constants.GAME_BEGIN);
@@ -438,6 +458,7 @@ public class MyGdxGame extends ApplicationAdapter {
         if(win_rounds==Constants.BOSS_WIN_ROUND) win_rounds=0;
     }
 
+    //  генерация врагов на клиенте
     void InitEnemiesClient(int x, int y, int orient) {
         users.get(0).SetPos(x, y, orient, true, this);
 
@@ -453,6 +474,7 @@ public class MyGdxGame extends ApplicationAdapter {
         endcount=0;
     }
 
+    //  конец раунда на клиенте
     void StageClientEnd() {
         ms.stop_melody();
         getBb().stopSound();
@@ -469,6 +491,7 @@ public class MyGdxGame extends ApplicationAdapter {
         enemies.clear();
     }
 
+    //  запуск взрыва
     public void StartExplosion(float x, float y, int i, boolean isuser) {
         for (int k = 0; k < explosions.length; k++) {
             if (!explosions[k].isActive()) {
@@ -526,9 +549,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
     public int[][] GetTilesType() {
         int[][] ts = new int[tiles.length][tiles[0].length];
-        for (int i = 0; i < Constants.WINDOW_WIDTH; i += 50) {
-            for (int j = 0; j < Constants.WINDOW_HEIGHT; j += 50) {
-                ts[i / 50][j / 50] = tiles[i / 50][j / 50].getType();
+        for (int i = 0; i < Constants.WINDOW_WIDTH; i += Constants.TILE_SIZE) {
+            for (int j = 0; j < Constants.WINDOW_HEIGHT; j += Constants.TILE_SIZE) {
+                ts[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE] = tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getType();
             }
         }
         return ts;
@@ -550,23 +573,25 @@ public class MyGdxGame extends ApplicationAdapter {
         return mserv;
     }
 
+    //  запуск сервера
     public boolean InitServer(int port, String username) {
         if (mserv != null) mserv.Close();
         //if(mserv.equals(null)) {
         mserv = new MyServer(port, this);
-        sd = new SendData(Constants.WINDOW_WIDTH / 50, Constants.WINDOW_HEIGHT / 50, lock, this);
+        sd = new SendData(Constants.WINDOW_WIDTH / Constants.TILE_SIZE, Constants.WINDOW_HEIGHT / Constants.TILE_SIZE, lock, this);
         users.get(0).setName(username);
         return mserv.getServer().isBound();
         //}
         //return false;
     }
 
+    //  запуск клиента
     public boolean InitClient(String server, int port, String username) {
         if (mcl != null) mcl.Close();
         mcl = new MyClient(server, port, this);
         if (mcl.getSock() == null) return false;
 
-        sd = new SendData(Constants.WINDOW_WIDTH / 50, Constants.WINDOW_HEIGHT / 50, lock, this);
+        sd = new SendData(Constants.WINDOW_WIDTH / Constants.TILE_SIZE, Constants.WINDOW_HEIGHT / Constants.TILE_SIZE, lock, this);
         sd.addTank(users.get(0).getPosition().x, users.get(0).getPosition().y, users.get(0).getOrient(), users.get(0).getId());
         log("Add tank (InitClient) "+getClass().getName());
         users.get(0).setName(username);
@@ -590,6 +615,7 @@ public class MyGdxGame extends ApplicationAdapter {
         return users;
     }
 
+    //  отправить всем текущее расположение объектов
     public void sendBroadcastMessage(final SendData senddata) {
         Thread th = new Thread(new Runnable() {
             @Override

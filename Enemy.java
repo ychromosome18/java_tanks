@@ -136,13 +136,13 @@ public class Enemy {
     public void renderBonus(SpriteBatch batch) {
         if (visible) {
             for (int i = 0; i < bon_img.size(); i++) {
-                Bonus.GetSprite(bon_img.get(i)[0]).setSize(50f / Constants.BONUS_SMALL_SCALE, 50f / Constants.BONUS_SMALL_SCALE);
+                Bonus.GetSprite(bon_img.get(i)[0]).setSize(1f*Constants.TILE_SIZE / Constants.BONUS_SMALL_SCALE, 1f*Constants.TILE_SIZE / Constants.BONUS_SMALL_SCALE);
                 if (bon_img.get(i)[1] < 300)
-                    Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(0.5f + ((float) (bon_img.get(i)[1] % 50)) / 100);
+                    Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(0.5f + ((float) (bon_img.get(i)[1] % Constants.TILE_SIZE)) / 100);
                 else Bonus.GetSprite(bon_img.get(i)[0]).setAlpha(1f);
-                Bonus.GetSprite(bon_img.get(i)[0]).setPosition(position.x + i * 50f / Constants.BONUS_SMALL_SCALE + texwid / 2, position.y + texhei / 2);
+                Bonus.GetSprite(bon_img.get(i)[0]).setPosition(position.x + i * Constants.TILE_SIZE*1f / Constants.BONUS_SMALL_SCALE + texwid / 2, position.y + texhei / 2);
                 Bonus.GetSprite(bon_img.get(i)[0]).draw(batch);
-                Bonus.GetSprite(bon_img.get(i)[0]).setSize(50f, 50f);
+                Bonus.GetSprite(bon_img.get(i)[0]).setSize(1f*Constants.TILE_SIZE, 1f*Constants.TILE_SIZE);
             }
         }
     }
@@ -182,8 +182,8 @@ public class Enemy {
         if (sprk.isActive()) {
             sprk.update();
         } else if (mg.getGame_mode() == Constants.GAME_MODE_CLIENT) {
-            int nextx = (int) (position.x + direction.x * (speed + texwid / 2)) / 50;
-            int nexty = (int) (position.y + direction.y * (speed + texhei / 2)) / 50;
+            int nextx = (int) (position.x + direction.x * (speed + texwid / 2)) / Constants.TILE_SIZE;
+            int nexty = (int) (position.y + direction.y * (speed + texhei / 2)) / Constants.TILE_SIZE;
             if (nextx < 0 || nextx > mg.getTiles().length - 1) direction.x = 0;
             else if (nexty < 0 || nexty > mg.getTiles()[0].length - 1) direction.y = 0;
             else if (!mg.getTiles()[nextx][nexty].isPass()) direction.set(0, 0);
@@ -222,8 +222,8 @@ public class Enemy {
                     direction.y = -1;
                 }
 
-                int locx = (int) position.x / 50;
-                int locy = (int) position.y / 50;
+                int locx = (int) position.x / Constants.TILE_SIZE;
+                int locy = (int) position.y / Constants.TILE_SIZE;
                 //int distx = (int) (position.x - tank.position.x);
                 //int disty = (int) (position.y - tank.position.y);
                 //FindPath(tiles, (int) tank.position.x / 50, (int) tank.position.y / 50);
@@ -241,7 +241,7 @@ public class Enemy {
                     if (engine_id != -1) mg.getMs().pause("enemyengine", engine_id);
                 }
 
-                if (Math.abs(tiles[locx][locy].getPosition().x + 25 - position.x) <= speed / 2 && Math.abs(tiles[locx][locy].getPosition().y + 25 - position.y) <= speed / 2) {
+                if (Math.abs(tiles[locx][locy].getPosition().x + Constants.TILE_SIZE/2 - position.x) <= speed / 2 && Math.abs(tiles[locx][locy].getPosition().y + Constants.TILE_SIZE/2 - position.y) <= speed / 2) {
                     int dist = 10000, distx = 0, disty = 0, us_dist;
                     if (mg.getGame_mode() == Constants.GAME_MODE_SERVER) {
                         for (user usr : mg.getUsers()) {
@@ -249,8 +249,8 @@ public class Enemy {
                                 us_dist = Math.abs((int) (position.x - usr.getPosition().x)) + Math.abs((int) (position.y - usr.getPosition().y));
                                 if (dist > us_dist) {
                                     dist = us_dist;
-                                    distx = (int) usr.getPosition().x / 50;
-                                    disty = (int) usr.getPosition().y / 50;
+                                    distx = (int) usr.getPosition().x / Constants.TILE_SIZE;
+                                    disty = (int) usr.getPosition().y / Constants.TILE_SIZE;
                                 }
                             }
                         }
@@ -259,8 +259,8 @@ public class Enemy {
                     if (tank.isAlive()) {
                         us_dist = Math.abs((int) (position.x - tank.getPosition().x)) + Math.abs((int) (position.y - tank.getPosition().y));
                         if (dist > us_dist) {
-                            distx = (int) tank.getPosition().x / 50;
-                            disty = (int) tank.getPosition().y / 50;
+                            distx = (int) tank.getPosition().x / Constants.TILE_SIZE;
+                            disty = (int) tank.getPosition().y / Constants.TILE_SIZE;
                         }
                     }
 
@@ -298,6 +298,9 @@ public class Enemy {
                         RememberShot(locx, locy, orient);
                         action_delay = Constants.ENEMY_ACTION_DELAY;
                     }
+                } else if(direction.x==0 && direction.y==0 && position.y==Constants.WINDOW_HEIGHT-Constants.TILE_SIZE/2) {
+                    direction.x = -1;
+                    orient = 90;
                 }
             }
         }
@@ -431,7 +434,7 @@ public class Enemy {
         for (int i = 0; i < maxx; i++) {
             Arrays.fill(t[i], -1);
         }
-        t[(int) position.x / 50][(int) position.y / 50] = 0;
+        t[(int) position.x / Constants.TILE_SIZE][(int) position.y / Constants.TILE_SIZE] = 0;
 
         for (int k = 0; k < maxx * 2 + maxy; k++) {
             for (int i = 0; i < maxx; i++) {

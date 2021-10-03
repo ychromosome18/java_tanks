@@ -79,9 +79,9 @@ public class shell {
                     }
 
                     if (!active) return active;
-                    for (int k = 0; k < Constants.WINDOW_WIDTH; k += 50) {
-                        for (int j = 0; j < Constants.WINDOW_HEIGHT; j += 50) {
-                            if (tiles[k / 50][j / 50].BulletHit(this, mg.getMs())) break;
+                    for (int k = 0; k < Constants.WINDOW_WIDTH; k += Constants.TILE_SIZE) {
+                        for (int j = 0; j < Constants.WINDOW_HEIGHT; j += Constants.TILE_SIZE) {
+                            if (tiles[k / Constants.TILE_SIZE][j / Constants.TILE_SIZE].BulletHit(this, mg.getMs())) break;
                         }
                     }
 

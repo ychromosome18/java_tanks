@@ -168,10 +168,10 @@ public class SendData implements Serializable, Cloneable {
         try {
             lock.lock();
 
-            if (this.tiles == null) this.tiles = new int[Constants.WINDOW_WIDTH / 50][Constants.WINDOW_HEIGHT / 50];
-            for (int i = 0; i < Constants.WINDOW_WIDTH; i += 50) {
-                for (int j = 0; j < Constants.WINDOW_HEIGHT; j += 50) {
-                    this.tiles[i / 50][j / 50] = tiles[i / 50][j / 50].getType();
+            if (this.tiles == null) this.tiles = new int[Constants.WINDOW_WIDTH / Constants.TILE_SIZE][Constants.WINDOW_HEIGHT / Constants.TILE_SIZE];
+            for (int i = 0; i < Constants.WINDOW_WIDTH; i += Constants.TILE_SIZE) {
+                for (int j = 0; j < Constants.WINDOW_HEIGHT; j += Constants.TILE_SIZE) {
+                    this.tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE] = tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE].getType();
                 }
             }
         } catch (Exception e) {
@@ -264,11 +264,11 @@ public class SendData implements Serializable, Cloneable {
     public void ReturnData(MyGdxGame mg) {
         try {
             if (tiles != null) {
-                for (int i = 0; i < Constants.WINDOW_WIDTH; i += 50) {
-                    for (int j = 0; j < Constants.WINDOW_HEIGHT; j += 50) {
+                for (int i = 0; i < Constants.WINDOW_WIDTH; i += Constants.TILE_SIZE) {
+                    for (int j = 0; j < Constants.WINDOW_HEIGHT; j += Constants.TILE_SIZE) {
                         if (mg.getGame_type() == Constants.GAME_TYPE_PvP && mg.getUsers().get(0).getTeamid() == 2)
-                            mg.getTiles()[i / 50][(Constants.WINDOW_HEIGHT - j - 1) / 50].rewrite(tiles[i / 50][j / 50]);
-                        else mg.getTiles()[i / 50][j / 50].rewrite(tiles[i / 50][j / 50]);
+                            mg.getTiles()[i / Constants.TILE_SIZE][(Constants.WINDOW_HEIGHT - j - 1) / Constants.TILE_SIZE].rewrite(tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE]);
+                        else mg.getTiles()[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE].rewrite(tiles[i / Constants.TILE_SIZE][j / Constants.TILE_SIZE]);
                     }
                 }
             }
@@ -492,7 +492,7 @@ public class SendData implements Serializable, Cloneable {
         SendData newsd;
         try {
             lock.lock();
-            newsd = new SendData(Constants.WINDOW_WIDTH / 50, Constants.WINDOW_HEIGHT / 50, lock, mg);
+            newsd = new SendData(Constants.WINDOW_WIDTH / Constants.TILE_SIZE, Constants.WINDOW_HEIGHT / Constants.TILE_SIZE, lock, mg);
             newsd.setBonuses((HashMap<Integer, Integer[]>) bonuses.clone());
             newsd.setBullets((ArrayList<String[]>) bullets.clone());
             newsd.setTanks((HashMap<String, Integer[]>) tanks.clone());

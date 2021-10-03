@@ -100,9 +100,10 @@ public class Bonus {
         }
     }
 
+    //  проверка взятия бонуса игроками
     public void CheckPick(user tank, MyGdxGame mg) {
         if(!end && getRect()!=null) {
-            if (tank.rect.contains(getRect().getX() + 25, getRect().getY() + 25)) {
+            if (tank.rect.contains(getRect().getX() + Constants.TILE_SIZE/2, getRect().getY() + Constants.TILE_SIZE/2)) {
                 mg.getMs().play("take_bonus");
                 switch (type) {
                     case 0:
@@ -156,9 +157,10 @@ public class Bonus {
         }
     }
 
+    //  проверка взятия бонуса врагами
     public void CheckPick(Enemy tank, MyGdxGame mg, int enemy_i) {
         if(!end && getRect()!=null) {
-            if (tank.getRect().contains(getRect().getX() + 25, getRect().getY() + 25)) {
+            if (tank.getRect().contains(getRect().getX() + Constants.TILE_SIZE/2, getRect().getY() + Constants.TILE_SIZE/2)) {
                 mg.getMs().play("take_bonus");
                 switch (type) {
                     case 0:
@@ -198,10 +200,11 @@ public class Bonus {
         }
     }
 
+    //  проверка взятия бонуса боссом
     public void CheckPick(MyGdxGame mg) {
         if(!end && getRect()!=null && mg.getBb().isAlive()) {
             BigBoss bb=mg.getBb();
-            if (Intersector.isPointInPolygon(mg.getBb().getBoundRect(),0, mg.getBb().getBoundRect().length, getRect().getX() + 25, getRect().getY() + 25)) {
+            if (Intersector.isPointInPolygon(mg.getBb().getBoundRect(),0, mg.getBb().getBoundRect().length, getRect().getX() + Constants.TILE_SIZE/2, getRect().getY() + Constants.TILE_SIZE/2)) {
                 mg.getMs().play("take_bonus");
                 switch (type) {
                     case 0:
@@ -243,6 +246,7 @@ public class Bonus {
         }
     }
 
+    //  конец действия бонуса для игроков
     public void DeBonus(user tank, MyGdxGame mg) {
         switch (type) {
             case 0:
@@ -271,6 +275,7 @@ public class Bonus {
         mg.log("DeBonus "+type+", tank "+tank.getId());
     }
 
+    //  конец действия бонуса для врагов
     public void DeBonus(Enemy tank, MyGdxGame mg) {
         switch (type) {
             case 0:
@@ -299,6 +304,7 @@ public class Bonus {
         mg.log("DeBonus "+type+", enemy ");
     }
 
+    //  конец действия бонуса для босса
     public void DeBonus(BigBoss tank, MyGdxGame mg) {
         switch (type) {
             case 0:
@@ -343,7 +349,7 @@ public class Bonus {
 
     public void render(SpriteBatch batch) {
         if(!isEnd()) {
-            sprites[type].setAlpha(0.5f+((float)(count%50))/100);
+            sprites[type].setAlpha(0.5f+((float)(count%Constants.TILE_SIZE))/100);
             sprites[type].setPosition(position.x, position.y);
             sprites[type].setScale(1f);
             sprites[type].draw(batch);

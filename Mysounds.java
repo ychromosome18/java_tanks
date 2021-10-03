@@ -37,6 +37,13 @@ public class Mysounds {
         sound.put("evil_laugh4", new VolSound(Gdx.audio.newSound(Gdx.files.internal("evil_laugh4.mp3")),0.25f));
         sound.put("turret", new VolSound(Gdx.audio.newSound(Gdx.files.internal("turret.mp3")),0.7f));
         sound.put("boss_engine", new VolSound(Gdx.audio.newSound(Gdx.files.internal("boss_engine2.mp3")),0.3f));
+        sound.put("win1", new VolSound(Gdx.audio.newSound(Gdx.files.internal("win1.mp3")),0.35f));
+        sound.put("win2", new VolSound(Gdx.audio.newSound(Gdx.files.internal("win2.mp3")),0.35f));
+        sound.put("win3", new VolSound(Gdx.audio.newSound(Gdx.files.internal("win3.mp3")),0.35f));
+        sound.put("win4", new VolSound(Gdx.audio.newSound(Gdx.files.internal("win4.mp3")),0.35f));
+        sound.put("fail1", new VolSound(Gdx.audio.newSound(Gdx.files.internal("fail1.mp3")),0.35f));
+        sound.put("fail2", new VolSound(Gdx.audio.newSound(Gdx.files.internal("fail2.mp3")),0.35f));
+        sound.put("fail3", new VolSound(Gdx.audio.newSound(Gdx.files.internal("fail3.mp3")),0.35f));
 
         melody = new ArrayList<Melody>();
 
@@ -85,6 +92,20 @@ public class Mysounds {
                 sound.get(name + String.valueOf(n)).play(volume);
             } else if (sound.containsKey(name))
                 sound.get(name).play(volume);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void play_end(boolean win) {
+        try {
+            if (win) {
+                int n = rand.nextInt(4) + 1;
+                sound.get("win" + String.valueOf(n)).play(volume);
+            } else {
+                int n = rand.nextInt(3) + 1;
+                sound.get("fail" + String.valueOf(n)).play(volume);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -7,13 +7,14 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Color;
 
 public class Constants {
-    static final int WINDOW_WIDTH=1200;
-    static final int WINDOW_HEIGHT=700;
+    public static int WINDOW_WIDTH=1200;
+    public static int WINDOW_HEIGHT=700;
     static final int ROUNDEND_PIC_WIDTH=500;
     static final int ROUNDEND_PIC_HEIGHT=350;
     static final float ROUNDEND_WORD_RATIO=2f;
+    public static final int TILE_SIZE=50;
 
-    static final int SCORE_WIDTH=120;
+    public static final int SCORE_WIDTH=120;
     static final int SCORE_GAP=6;
     static final float SCORE_TANK_SIZE=0.66f;
 
